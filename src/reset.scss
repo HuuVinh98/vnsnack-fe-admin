@@ -1,0 +1,56 @@
+@import "grid";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+li {
+  list-style-type: none;
+}
+a {
+  text-decoration: none !important;
+  transition: all 0.5s;
+}
+//modif code in reboot.scss of boostrap
+ol,
+ul {
+  padding-left: 0rem !important;
+}
+p {
+  margin-bottom: 0 !important;
+}
+dl,
+ol,
+ul {
+  margin-top: 0;
+  margin-bottom: 0 !important;
+}
+// -----
+input,
+button {
+  outline: none;
+}
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  @include lg() {
+    padding: 0px 3%;
+  }
+  @include md() {
+    max-width: 800px;
+  }
+  @include sm() {
+    max-width: 680px;
+  }
+  @include xs() {
+    padding: 0px 10%;
+  }
+}
+.container2 {
+  max-width: 1400px;
+  margin: 0 auto;
+  @include lg() {
+    padding: 0px 3%;
+  }
+}

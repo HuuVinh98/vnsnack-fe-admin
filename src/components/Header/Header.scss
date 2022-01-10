@@ -1,0 +1,12 @@
+@import "../../flex";
+@import "../../grid";
+
+header {
+  background-color: #333;
+  padding: 10px 0px;
+  ul {
+    width: 100%;
+    color: white;
+    font-size: 30px;
+  }
+}
