@@ -7,6 +7,7 @@ import Item from "./Item/Item";
 export default function Product() {
   return (
     <div className="product flex f-column a-center">
+      <h2>THÔNG TIN SẢN PHẨM</h2>
       <div className="tool-bar">
         <form className="flex j-spaceBetween">
           <input placeholder="Tìm kiếm" id="search" />
@@ -18,8 +19,10 @@ export default function Product() {
             <option>Expensive</option>
           </select>
           <button>
-            <FontAwesomeIcon icon={faPlus} />
-            Thêm mới
+            <a href="/add-product">
+              <FontAwesomeIcon icon={faPlus} />
+              Thêm mới
+            </a>
           </button>
         </form>
       </div>
@@ -33,8 +36,9 @@ export default function Product() {
           <th>Danh mục</th>
           <th>Ảnh</th>
           <th>Giá</th>
+
           <th>Số lượng</th>
-          <th>Hạn sử dụng</th>
+
           <th>New</th>
           <th>Hot</th>
           <th>Expensive</th>
@@ -48,7 +52,7 @@ export default function Product() {
           img={mucrim}
           price={35}
           quantity={52}
-          exp={"22/5/22"}
+          news={true}
         />
         <Item
           stt={2}
@@ -57,7 +61,8 @@ export default function Product() {
           img={mucrim}
           price={35}
           quantity={52}
-          exp={"22/5/22"}
+          hot={true}
+          expensive={true}
         />
       </table>
     </div>

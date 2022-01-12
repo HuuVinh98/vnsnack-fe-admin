@@ -1,4 +1,5 @@
 import Product from "./Product/Product";
+import AddProduct from "./AddProduct/AddProduct";
 import {
   faAngleDown,
   faAngleRight,
@@ -7,7 +8,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Switch, Route } from "react-router-dom";
 import "./MainContent.scss";
+import { useEffect, useState } from "react";
 export default function MainContent() {
+  const [drop, setDrop] = useState(false);
   return (
     <div className="main-content">
       <div className="container flex">
@@ -17,22 +20,35 @@ export default function MainContent() {
               <div className="title flex j-around a-center">
                 <FontAwesomeIcon icon={faClock} />
                 <p>Quản trị danh mục</p>
-                <FontAwesomeIcon icon={faAngleDown} />
+                <FontAwesomeIcon
+                  icon={faAngleDown}
+                  onClick={() => {
+                    setDrop(!drop);
+                  }}
+                />
               </div>
-              <ul className="drop-down">
+              <ul
+                className={`drop-down ${
+                  drop === true ? "drop-down__active" : ""
+                }`}
+              >
                 <li>
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    style={{ marginRight: "10px" }}
-                  />
-                  Sản phẩm
+                  <a href="/product">
+                    <FontAwesomeIcon
+                      icon={faAngleRight}
+                      style={{ marginRight: "10px" }}
+                    />
+                    Sản phẩm
+                  </a>
                 </li>
                 <li>
-                  <FontAwesomeIcon
-                    icon={faAngleRight}
-                    style={{ marginRight: "10px" }}
-                  />
-                  Sản phẩm
+                  <a href="">
+                    <FontAwesomeIcon
+                      icon={faAngleRight}
+                      style={{ marginRight: "10px" }}
+                    />
+                    ABCD
+                  </a>
                 </li>
               </ul>
             </li>
@@ -49,7 +65,15 @@ export default function MainContent() {
           </ul>
         </div>
         <div className="main-content__right">
-          <Product />
+          <Switch>
+            <Route path="/" exact></Route>
+            <Route path="/product">
+              <Product />
+            </Route>
+            <Route path="/add-product">
+              <AddProduct />
+            </Route>
+          </Switch>
         </div>
       </div>
     </div>
