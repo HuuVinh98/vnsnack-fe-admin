@@ -6,12 +6,14 @@ function Header() {
     <header>
       <ul className="container">
         <li>
-          <FontAwesomeIcon
-            icon={faUsersCog}
-            color="white"
-            style={{ marginRight: "10px" }}
-          />
-          Administrator
+          <a href="/" style={{ color: "white" }}>
+            <FontAwesomeIcon
+              icon={faUsersCog}
+              color="white"
+              style={{ marginRight: "10px" }}
+            />
+            Administrator
+          </a>
         </li>
       </ul>
     </header>

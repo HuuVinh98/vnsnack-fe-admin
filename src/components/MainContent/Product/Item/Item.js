@@ -7,8 +7,12 @@ export default function Item({
   category,
   img,
   price,
+
   quantity,
-  exp,
+
+  hot,
+  news,
+  expensive,
 }) {
   return (
     <tr>
@@ -16,22 +20,23 @@ export default function Item({
         <input type="checkbox" />
       </td>
       <td>{stt}</td>
-      <td>{name}</td>
+      <td style={{ textAlign: "left" }}>{name}</td>
       <td>{category}</td>
       <td>
         <img src={img} />
       </td>
       <td>{price}$</td>
+
       <td>{quantity}</td>
-      <td>{exp}</td>
-      <td>
-        <input type="checkbox" />
+
+      <td className="checkbox-new">
+        <input type="checkbox" checked={news === true ? "checked" : ""} />
       </td>
-      <td>
-        <input type="checkbox" />
+      <td className="checkbox-hot">
+        <input type="checkbox" checked={hot === true ? "checked" : ""} />
       </td>
-      <td>
-        <input type="checkbox" />
+      <td className="checkbox-expensive">
+        <input type="checkbox" checked={expensive === true ? "checked" : ""} />
       </td>
       <td>
         <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />

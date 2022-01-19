@@ -1,0 +1,32 @@
+@import "../../flex";
+@import "../../grid";
+.custom-editor {
+  //   padding: 24px 200px;
+  max-width: 100%;
+  border: 1px solid #c4c4c4;
+  .DraftEditor-root {
+    width: 100%;
+    min-height: 200px;
+    border: solid 1px #bbb;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    cursor: text;
+    padding: 16px;
+    border-radius: 2px;
+
+    box-shadow: inset 0px 1px 8px -3px #ababab;
+    background: #fefefe;
+  }
+  .tool-bar {
+    .text-decoration {
+      button {
+        background: none;
+        padding: 5px;
+        border-radius: 0;
+        color: #585454;
+        font-weight: bold;
+        margin-right: 0;
+      }
+    }
+  }
+}
