@@ -20,7 +20,7 @@ export default function Item({
         <input type="checkbox" />
       </td>
       <td>{stt}</td>
-      <td>{name}</td>
+      <td style={{ textAlign: "left" }}>{name}</td>
       <td>{category}</td>
       <td>
         <img src={img} />

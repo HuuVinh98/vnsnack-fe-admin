@@ -1,5 +1,6 @@
 import Product from "./Product/Product";
 import AddProduct from "./AddProduct/AddProduct";
+import HomePage from "./HomePage/HomePage";
 import {
   faAngleDown,
   faAngleRight,
@@ -66,7 +67,9 @@ export default function MainContent() {
         </div>
         <div className="main-content__right">
           <Switch>
-            <Route path="/" exact></Route>
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
             <Route path="/product">
               <Product />
             </Route>
