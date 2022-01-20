@@ -7,18 +7,14 @@ export default function Item({
   category,
   img,
   price,
-
+  id,
   quantity,
-
   hot,
   news,
   expensive,
 }) {
   return (
     <tr>
-      <td>
-        <input type="checkbox" />
-      </td>
       <td>{stt}</td>
       <td style={{ textAlign: "left" }}>{name}</td>
       <td>{category}</td>
