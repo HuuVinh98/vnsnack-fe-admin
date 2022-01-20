@@ -9,24 +9,20 @@ export default function Product() {
   const [keyWord, setKeyWord] = useState(""); //từ khoá tìm tiếm
   const [sort, setSort] = useState("new"); // sắp xếp theo
   const [take, setTake] = useState(0); // số lượng hiển thị
-  const [categoryId, setCategoryId] = useState(1); //
-  const [currentCategory, setCurrentCategory] = useState("Kẹo");
+  const [categoryId, setCategoryId] = useState("Tất cả"); //
+  const [currentCategory, setCurrentCategory] = useState("");
   //lấy danh sách sản phẩm
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    if (take > 0) {
-      fetch(
-        `http://api.vnsnack.com/product?keyword=${keyWord}&take=${take}&sort=${sort}&categoryId=${categoryId}`
-      )
-        .then((res) => res.json())
-        .then((products) => setProducts(products));
-    } else {
-      fetch(
-        `http://api.vnsnack.com/product?keyword=${keyWord}&sort=${sort}&categoryId=${categoryId}`
-      )
-        .then((res) => res.json())
-        .then((products) => setProducts(products));
-    }
+    fetch(
+      `http://api.vnsnack.com/product?keyword=${keyWord}${
+        take > 0 ? `&take=${take}` : ""
+      }&sort=${sort}${
+        categoryId !== "Tất cả" ? `&categoryId=${categoryId}` : ""
+      }`
+    )
+      .then((res) => res.json())
+      .then((products) => setProducts(products));
   }, [keyWord, sort, take, categoryId]);
 
   //lấy danh mục
@@ -36,7 +32,7 @@ export default function Product() {
       .then((res) => res.json())
       .then((category) => setCategory(category));
   }, []);
-  console.log(category);
+
   return (
     <div className="product flex f-column a-center">
       <h2>THÔNG TIN SẢN PHẨM</h2>
@@ -75,6 +71,7 @@ export default function Product() {
               setCurrentCategory(e.target.value);
             }}
           >
+            <option>Tất cả</option>
             {category.map((val, idx) => {
               return (
                 <option key={idx} value={val.id}>
@@ -93,9 +90,6 @@ export default function Product() {
       </div>
       <table className="statistical">
         <tr>
-          <th>
-            <input type="checkbox" />
-          </th>
           <th>STT</th>
           <th>Tên</th>
           <th>Danh mục</th>
@@ -114,6 +108,7 @@ export default function Product() {
           return (
             <Item
               stt={idx + 1}
+              id={val.id}
               name={val.name}
               category={currentCategory}
               img={val.photos.find((img) => img.isThumbnail).url}

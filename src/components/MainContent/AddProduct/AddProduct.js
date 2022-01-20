@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import MyEditor from "../../Editor/Editor";
+import { Editor } from "react-draft-wysiwyg";
+import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 export default function AddProduct() {
   //lấy danh mục
   const [category, setCategory] = useState([]);
@@ -89,7 +92,7 @@ export default function AddProduct() {
         </li>
         <li className="flex f-column">
           <span>Mô tả:</span>
-          <MyEditor />
+          <Editor />
         </li>
 
         <li className="flex a-center j-center">
