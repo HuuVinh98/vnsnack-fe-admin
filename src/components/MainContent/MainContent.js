@@ -9,9 +9,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Switch, Route } from "react-router-dom";
 import "./MainContent.scss";
-import { useEffect, useState } from "react";
+
 export default function MainContent() {
-  const [drop, setDrop] = useState(false);
   return (
     <div className="main-content">
       <div className="container flex">
@@ -20,19 +19,10 @@ export default function MainContent() {
             <li className="flex f-column">
               <div className="title flex j-around a-center">
                 <FontAwesomeIcon icon={faClock} />
-                <p>Quản trị danh mục</p>
-                <FontAwesomeIcon
-                  icon={faAngleDown}
-                  onClick={() => {
-                    setDrop(!drop);
-                  }}
-                />
+                <p>Danh mục</p>
+                <FontAwesomeIcon icon={faAngleDown} />
               </div>
-              <ul
-                className={`drop-down ${
-                  drop === true ? "drop-down__active" : ""
-                }`}
-              >
+              <ul className="drop-down">
                 <li>
                   <a href="/product">
                     <FontAwesomeIcon
@@ -55,17 +45,18 @@ export default function MainContent() {
             </li>
             <li className="flex j-around a-center">
               <FontAwesomeIcon icon={faClock} />
-              <p>Quản trị danh mục</p>
+              <p>Danh mục</p>
               <FontAwesomeIcon icon={faAngleDown} />
             </li>
             <li className="flex j-around a-center">
               <FontAwesomeIcon icon={faClock} />
-              <p>Quản trị danh mục</p>
+              <p>Danh mục</p>
               <FontAwesomeIcon icon={faAngleDown} />
             </li>
           </ul>
         </div>
-        <div className="main-content__right">
+
+        <div className="main-content__right flex a-center container">
           <Switch>
             <Route path="/" exact>
               <HomePage />

@@ -36,17 +36,20 @@ button {
 .container {
   max-width: 1300px;
   margin: 0 auto;
+  @include xl() {
+    padding: 0 1%;
+  }
   @include lg() {
     padding: 0px 3%;
   }
   @include md() {
-    max-width: 800px;
+    max-width: 1000px;
   }
   @include sm() {
-    max-width: 680px;
+    padding: 0px 1%;
   }
   @include xs() {
-    padding: 0px 10%;
+    padding: 0px 1%;
   }
 }
 .container2 {
