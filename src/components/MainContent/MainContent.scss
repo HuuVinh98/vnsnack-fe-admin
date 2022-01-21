@@ -3,46 +3,87 @@
 
 .main-content {
   .container {
+    @include md() {
+      flex-direction: column;
+    }
     .main-content__left {
+      width: 18%;
+      @include lg() {
+        width: 25%;
+      }
+      @include md() {
+        width: 100%;
+        height: max-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       border-right: 1px solid #c4c4c4;
-      width: 15%;
+
       ul.admin-list {
+        @include md() {
+          display: flex;
+          height: max-content;
+          width: 75%;
+        }
+        @include sm() {
+          width: 100%;
+        }
         width: 100%;
         height: 80vh;
         background-color: rgb(207, 181, 171);
         li {
+          @include md() {
+            border-right: 1px solid white;
+          }
+          z-index: 1;
           width: 100%;
           border-bottom: 1px solid #c4c4c4;
           padding: 10px 0px;
-
+          position: relative;
+          &:hover {
+            .drop-down {
+              display: block;
+            }
+          }
           .title {
             width: 100%;
             p {
               color: blue;
               font-weight: bold;
             }
+            padding: 5px;
           }
           .drop-down {
+            @include md() {
+              position: absolute;
+              top: 100%;
+              left: 0;
+            }
+            top: 100%;
+            left: 0;
             //text-align: center;
-            height: 0px;
+            height: max-content;
             display: none;
             width: 100%;
             // top: 100%;
             // left: 0%;
+            background-color: white;
+            box-shadow: 1px 1px -2px #333;
+
             li {
               padding-left: 20px;
             }
             color: blueviolet;
           }
-          .drop-down__active {
-            display: block;
-            height: max-content;
-          }
         }
       }
     }
     .main-content__right {
-      width: 85%;
+      width: 82%;
+      @include md() {
+        width: 100%;
+      }
     }
   }
 }
