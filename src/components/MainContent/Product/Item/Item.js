@@ -1,6 +1,7 @@
 import { faEdit, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {} from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
 export default function Item({
   stt,
   name,
@@ -35,7 +36,9 @@ export default function Item({
         <input type="checkbox" checked={expensive === true ? "checked" : ""} />
       </td>
       <td>
-        <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />
+        <Link to={`/edit-product/${id}`}>
+          <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />
+        </Link>
         <FontAwesomeIcon icon={faTrash} />
       </td>
     </tr>

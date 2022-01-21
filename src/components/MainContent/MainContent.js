@@ -1,6 +1,7 @@
 import Product from "./Product/Product";
 import AddProduct from "./AddProduct/AddProduct";
 import HomePage from "./HomePage/HomePage";
+import EditProduct from "./EditProduct/EditProduct";
 import {
   faAngleDown,
   faAngleRight,
@@ -66,6 +67,9 @@ export default function MainContent() {
             </Route>
             <Route path="/add-product">
               <AddProduct />
+            </Route>
+            <Route path="/edit-product/:id">
+              <EditProduct />
             </Route>
           </Switch>
         </div>
