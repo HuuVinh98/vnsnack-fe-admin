@@ -2,7 +2,7 @@ import "./AddProduct.scss";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import MyEditor from "../../Editor/Editor";
+import { Link } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -30,12 +30,14 @@ export default function AddProduct() {
       ]);
     }
   };
+  //chọn categories cho sản phẩm
+  const [categories, setCategories] = useState([]);
   return (
     <div className="add-product">
-      <h2>THÊM SẢN PHẨM MỚI</h2>
+      <h2>ADD NEW PRODUCT</h2>
       <ul className="flex f-column a-center">
         <li className="upload-imgs flex j-spaceBetween a-center">
-          <span>Hình ảnh: </span>
+          <span>Photos: </span>
           <div className="imgs flex">
             {imgs.map((val, idx) => {
               return (
@@ -57,7 +59,7 @@ export default function AddProduct() {
           )}
         </li>
         <li>
-          <span>Hình ảnh:</span>
+          <span></span>
           <input
             type="file"
             onChange={(e) => {
@@ -66,12 +68,30 @@ export default function AddProduct() {
           />
         </li>
         <li>
-          <span>Tên:</span>
+          <span>Name:</span>
           <input />
         </li>
         <li>
-          <span>Danh mục:</span>
-          <select>
+          <span>Categories:</span>
+          <input list="categories" />
+          <datalist id="categories">
+            {category.map((val, idx) => {
+              return (
+                <option
+                  key={idx}
+                  value={val.name}
+                  onClick={(e) => {
+                    setCategories([...categories, e.target.value]);
+                    console.log(categories);
+                    console.log(e.target.value);
+                  }}
+                >
+                  {val.name}
+                </option>
+              );
+            })}
+          </datalist>
+          {/* <select>
             {category.map((val, idx) => {
               return (
                 <option key={idx} value={val.name}>
@@ -79,26 +99,26 @@ export default function AddProduct() {
                 </option>
               );
             })}
-          </select>
+          </select> */}
         </li>
         <li>
-          <span>Giá ($):</span>
+          <span>Price ($):</span>
           <input type="number" />
         </li>
 
         <li>
-          <span>Số lượng:</span>
+          <span>Quantity:</span>
           <input type="number" />
         </li>
         <li className="flex f-column">
-          <span>Mô tả:</span>
+          <span>Description:</span>
           <Editor />
         </li>
 
         <li className="flex a-center j-center">
-          <button>Lưu</button>
+          <button>Save</button>
           <button>
-            <a href="/">Thoát</a>
+            <Link to="/">Exit</Link>
           </button>
         </li>
       </ul>

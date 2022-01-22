@@ -10,9 +10,6 @@ export default function Item({
   price,
   id,
   quantity,
-  hot,
-  news,
-  expensive,
 }) {
   return (
     <tr>
@@ -26,15 +23,6 @@ export default function Item({
 
       <td>{quantity}</td>
 
-      <td className="checkbox-new">
-        <input type="checkbox" checked={news === true ? "checked" : ""} />
-      </td>
-      <td className="checkbox-hot">
-        <input type="checkbox" checked={hot === true ? "checked" : ""} />
-      </td>
-      <td className="checkbox-expensive">
-        <input type="checkbox" checked={expensive === true ? "checked" : ""} />
-      </td>
       <td>
         <Link to={`/edit-product/${id}`}>
           <FontAwesomeIcon icon={faEdit} style={{ marginRight: "5px" }} />

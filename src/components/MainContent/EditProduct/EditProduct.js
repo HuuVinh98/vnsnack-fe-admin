@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-
+import { Link } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -119,7 +119,7 @@ export default function EditProduct() {
         <li className="flex a-center j-center">
           <button>Lưu</button>
           <button>
-            <a href="/">Thoát</a>
+            <Link to="/">Thoát</Link>
           </button>
         </li>
       </ul>

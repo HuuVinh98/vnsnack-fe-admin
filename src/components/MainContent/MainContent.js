@@ -8,7 +8,7 @@ import {
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import "./MainContent.scss";
 
 export default function MainContent() {
@@ -20,38 +20,38 @@ export default function MainContent() {
             <li className="flex f-column">
               <div className="title flex j-around a-center">
                 <FontAwesomeIcon icon={faClock} />
-                <p>Danh mục</p>
+                <p>Category</p>
                 <FontAwesomeIcon icon={faAngleDown} />
               </div>
               <ul className="drop-down">
                 <li>
-                  <a href="/product">
+                  <Link to="/product">
                     <FontAwesomeIcon
                       icon={faAngleRight}
                       style={{ marginRight: "10px" }}
                     />
-                    Sản phẩm
-                  </a>
+                    Products
+                  </Link>
                 </li>
                 <li>
-                  <a href="">
+                  <Link to="">
                     <FontAwesomeIcon
                       icon={faAngleRight}
                       style={{ marginRight: "10px" }}
                     />
                     ABCD
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
             <li className="flex j-around a-center">
               <FontAwesomeIcon icon={faClock} />
-              <p>Danh mục</p>
+              <p>Category</p>
               <FontAwesomeIcon icon={faAngleDown} />
             </li>
             <li className="flex j-around a-center">
               <FontAwesomeIcon icon={faClock} />
-              <p>Danh mục</p>
+              <p>Category</p>
               <FontAwesomeIcon icon={faAngleDown} />
             </li>
           </ul>
