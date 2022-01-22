@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
+
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 export default function AddProduct() {
@@ -32,6 +33,11 @@ export default function AddProduct() {
   };
   //chọn categories cho sản phẩm
   const [categories, setCategories] = useState([]);
+  //biến lấy giá trị
+  const [photos, setPhotos] = useState([]);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
   return (
     <div className="add-product">
       <h2>ADD NEW PRODUCT</h2>
@@ -73,19 +79,19 @@ export default function AddProduct() {
         </li>
         <li>
           <span>Categories:</span>
+
           <input list="categories" />
-          <datalist id="categories">
+          <datalist
+            id="categories"
+            onChange={(e) => {
+              setCategories([...categories, e.target.value]);
+              console.log(categories);
+              console.log(e.target.value);
+            }}
+          >
             {category.map((val, idx) => {
               return (
-                <option
-                  key={idx}
-                  value={val.name}
-                  onClick={(e) => {
-                    setCategories([...categories, e.target.value]);
-                    console.log(categories);
-                    console.log(e.target.value);
-                  }}
-                >
+                <option key={idx} value={val.name}>
                   {val.name}
                 </option>
               );
