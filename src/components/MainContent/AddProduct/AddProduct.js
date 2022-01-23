@@ -19,35 +19,72 @@ export default function AddProduct() {
   }, []);
 
   //biến chứa các thông tin của sản phẩm
-  const [categories, setCategories] = useState([]); //chọn categories cho sản phẩm
-  const [imgs, setImgs] = useState([]); //lấy hình ảnh và hiện lên
+  const [categories, setCategories] = useState([{ id: 1 }, { id: 8 }]); //chọn categories cho sản phẩm
+  const [photos, setPhotos] = useState([]); //lấy hình ảnh và hiện lên
   const [name, setName] = useState(""); // lấy tên sản phẩm
   const [price, setPrice] = useState(0); // lấy giá sản phẩm
   const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
-  const [desc, setDesc] = useState(""); //lấy mô tả sản phẩm
+  const [description, setDescription] = useState(""); //lấy mô tả sản phẩm
   const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
   const [product, setProduct] = useState({}); // object sản phẩm
   // các funcion
-  let deleteImg = () => {
-    setImgs([]);
+  const deconsteImg = () => {
+    setPhotos([]);
   }; //xoá ảnh
-  let onImageChange = (e) => {
+  const onImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImgs([
-        ...imgs,
+      setPhotos([
+        ...photos,
         {
-          image: URL.createObjectURL(e.target.files[0]),
+          url: URL.createObjectURL(e.target.files[0]),
         },
       ]);
     }
   }; //thêm ảnh
-  let onEditorStateChange = (editorState) => {
+  const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
-    setDesc(draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
+    setDescription(
+      draftToMarkdown(convertToRaw(editorState.getCurrentContent()))
+    );
   }; //thay đổi nội dung phần mô tả
-  let validate = (product) => {
+  const postData = (product) => {
+    console.log(product);
+    fetch("http://api.vnsnack.com/product", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(product),
+    });
+  }; //post to api
+  // async function _postData(url = "", data = {}) {
+  //   const response = await fetch(url, {
+  //     method: "POST",
+  //     mode: "cors",
+  //     cache: "no-cache",
+  //     credentials: "same-origin",
+  //     redirect: "follow",
+  //     referrerPolicy: "no-referrer",
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
+
+  //   return response.json();
+  // }
+  const validate = (product) => {
     if (price >= 0 && quantity >= 0) {
-      setProduct({ imgs, name, categories, price, quantity, desc });
+      setProduct({ photos, name, categories, price, quantity, description });
+      postData(product);
+      // _postData("http://api.vnsnack.com/product", product)
+      //   .then((json) => {
+      //     console.log(json); // Handle success
+      //   })
+      //   .catch((err) => {
+      //     console.log(err); // Handle errors
+      //   });
     } else {
       if (price < 0) alert("Price must be greater than or equal to 0");
       if (quantity < 0) alert("Quantity must be greater than or equal to 0");
@@ -61,7 +98,7 @@ export default function AddProduct() {
         <li className="upload-imgs flex j-spaceBetween a-center">
           <span>Photos: </span>
           <div className="imgs flex">
-            {imgs.map((val, idx) => {
+            {photos.map((val, idx) => {
               return (
                 <div className="img">
                   <img src={val.image} />
@@ -69,11 +106,11 @@ export default function AddProduct() {
               );
             })}
           </div>
-          {imgs.length !== 0 ? (
+          {photos.length !== 0 ? (
             <FontAwesomeIcon
               icon={faTimesCircle}
               onClick={() => {
-                deleteImg();
+                deconsteImg();
               }}
             />
           ) : (
@@ -101,23 +138,19 @@ export default function AddProduct() {
           <span>Categories:</span>
           <input
             list="categories"
-            onBlur={(e) => {
-              let temp = [...categories, e.target.value];
-              setCategories(
-                temp.filter((val, idx) => {
-                  let index = temp.indexOf(val);
-                  return idx === index;
-                })
-              );
-            }}
+            // onBlur={(e) => {
+            //   const temp = [...categories, e.target.value];
+            //   setCategories(
+            //     temp.filter((val, idx) => {
+            //       const index = temp.indexOf(val);
+            //       return idx === index;
+            //     })
+            //   );
+            // }}
           />
           <datalist id="categories">
             {category.map((val, idx) => {
-              return (
-                <option key={idx} value={val.name}>
-                  {val.name}
-                </option>
-              );
+              return <option key={idx}>{val.name}</option>;
             })}
           </datalist>
         </li>
@@ -126,7 +159,7 @@ export default function AddProduct() {
           <input
             type="number"
             onChange={(e) => {
-              setPrice(e.target.value);
+              setPrice(parseFloat(e.target.value));
             }}
           />
         </li>
@@ -136,7 +169,7 @@ export default function AddProduct() {
           <input
             type="number"
             onChange={(e) => {
-              setQuantity(e.target.value);
+              setQuantity(parseInt(e.target.value));
             }}
           />
         </li>
@@ -163,7 +196,7 @@ export default function AddProduct() {
           <button
             onClick={() => {
               validate(product);
-              console.log(product.categories);
+              //console.log(product);
             }}
           >
             Save
