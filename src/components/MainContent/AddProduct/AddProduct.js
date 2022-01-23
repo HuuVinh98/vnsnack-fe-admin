@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
-
+import { EditorState, convertToRaw } from "draft-js";
+import draftToMarkdown from "draftjs-to-markdown";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 export default function AddProduct() {
@@ -21,6 +22,7 @@ export default function AddProduct() {
   const deleteImg = () => {
     setImgs([]);
   };
+  //thêm ảnh
   const onImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImgs([
@@ -34,10 +36,28 @@ export default function AddProduct() {
   //chọn categories cho sản phẩm
   const [categories, setCategories] = useState([]);
   //biến lấy giá trị
-  const [photos, setPhotos] = useState([]);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+
+  const [name, setName] = useState(""); // lấy tên sản phẩm
+  const [price, setPrice] = useState(0); // lấy giá sản phẩm
+  const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
+  const [desc, setDesc] = useState(""); //lấy mô tả sản phẩm
+  const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
+  // object sản phẩm
+  const [product, setProduct] = useState({});
+
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
+    setDesc(draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
+  };
+  //validate quantity and price
+  const validate = () => {
+    if (price >= 0 && quantity >= 0) {
+      setProduct({ imgs, name, price, quantity, desc });
+    } else {
+      if (price < 0) alert("Price must be greater than or equal to 0");
+      if (quantity < 0) alert("Quantity must be greater than or equal to 0");
+    }
+  };
   return (
     <div className="add-product">
       <h2>ADD NEW PRODUCT</h2>
@@ -75,20 +95,23 @@ export default function AddProduct() {
         </li>
         <li>
           <span>Name:</span>
-          <input />
+          <input
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
         </li>
         <li>
           <span>Categories:</span>
-
-          <input list="categories" />
-          <datalist
-            id="categories"
-            onChange={(e) => {
+          <input
+            list="categories"
+            onClick={(e) => {
               setCategories([...categories, e.target.value]);
               console.log(categories);
               console.log(e.target.value);
             }}
-          >
+          />
+          <datalist id="categories">
             {category.map((val, idx) => {
               return (
                 <option key={idx} value={val.name}>
@@ -109,20 +132,50 @@ export default function AddProduct() {
         </li>
         <li>
           <span>Price ($):</span>
-          <input type="number" />
+          <input
+            type="number"
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
+          />
         </li>
 
         <li>
           <span>Quantity:</span>
-          <input type="number" />
+          <input
+            type="number"
+            onChange={(e) => {
+              setQuantity(e.target.value);
+            }}
+          />
         </li>
         <li className="flex f-column">
           <span>Description:</span>
-          <Editor />
+          <Editor
+            //  editorState={desc}
+            initialEditorState={editorState}
+            toolbarClassName="toolbarClassName"
+            wrapperClassName="wrapperClassName"
+            editorClassName="editorClassName"
+            onEditorStateChange={onEditorStateChange}
+          />
+          {/* <textarea
+            disabled
+            value={
+              editorState &&
+              draftToMarkdown(convertToRaw(editorState.getCurrentContent()))
+            }
+          /> */}
         </li>
 
         <li className="flex a-center j-center">
-          <button>Save</button>
+          <button
+            onClick={(e) => {
+              validate();
+            }}
+          >
+            Save
+          </button>
           <button>
             <Link to="/">Exit</Link>
           </button>
