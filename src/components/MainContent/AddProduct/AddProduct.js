@@ -10,20 +10,28 @@ import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.cs
 
 export default function AddProduct() {
   //lấy danh mục
+
   const [category, setCategory] = useState([]);
   useEffect(() => {
     fetch(`http://api.vnsnack.com/category`)
       .then((res) => res.json())
       .then((category) => setCategory(category));
   }, []);
-  //lấy hình ảnh và hiện lên
-  const [imgs, setImgs] = useState([]);
-  //xoá ảnh
-  const deleteImg = () => {
+
+  //biến chứa các thông tin của sản phẩm
+  const [categories, setCategories] = useState([]); //chọn categories cho sản phẩm
+  const [imgs, setImgs] = useState([]); //lấy hình ảnh và hiện lên
+  const [name, setName] = useState(""); // lấy tên sản phẩm
+  const [price, setPrice] = useState(0); // lấy giá sản phẩm
+  const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
+  const [desc, setDesc] = useState(""); //lấy mô tả sản phẩm
+  const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
+  const [product, setProduct] = useState({}); // object sản phẩm
+  // các funcion
+  let deleteImg = () => {
     setImgs([]);
-  };
-  //thêm ảnh
-  const onImageChange = (e) => {
+  }; //xoá ảnh
+  let onImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImgs([
         ...imgs,
@@ -32,32 +40,20 @@ export default function AddProduct() {
         },
       ]);
     }
-  };
-  //chọn categories cho sản phẩm
-  const [categories, setCategories] = useState([]);
-  //biến lấy giá trị
-
-  const [name, setName] = useState(""); // lấy tên sản phẩm
-  const [price, setPrice] = useState(0); // lấy giá sản phẩm
-  const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
-  const [desc, setDesc] = useState(""); //lấy mô tả sản phẩm
-  const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
-  // object sản phẩm
-  const [product, setProduct] = useState({});
-
-  const onEditorStateChange = (editorState) => {
+  }; //thêm ảnh
+  let onEditorStateChange = (editorState) => {
     setEditorState(editorState);
     setDesc(draftToMarkdown(convertToRaw(editorState.getCurrentContent())));
-  };
-  //validate quantity and price
-  const validate = () => {
+  }; //thay đổi nội dung phần mô tả
+  let validate = (product) => {
     if (price >= 0 && quantity >= 0) {
-      setProduct({ imgs, name, price, quantity, desc });
+      setProduct({ imgs, name, categories, price, quantity, desc });
     } else {
       if (price < 0) alert("Price must be greater than or equal to 0");
       if (quantity < 0) alert("Quantity must be greater than or equal to 0");
     }
-  };
+  }; // kiểm tra dữ liệu và upload
+
   return (
     <div className="add-product">
       <h2>ADD NEW PRODUCT</h2>
@@ -101,14 +97,18 @@ export default function AddProduct() {
             }}
           />
         </li>
-        <li>
+        <li className="categories-datalist">
           <span>Categories:</span>
           <input
             list="categories"
-            onClick={(e) => {
-              setCategories([...categories, e.target.value]);
-              console.log(categories);
-              console.log(e.target.value);
+            onBlur={(e) => {
+              let temp = [...categories, e.target.value];
+              setCategories(
+                temp.filter((val, idx) => {
+                  let index = temp.indexOf(val);
+                  return idx === index;
+                })
+              );
             }}
           />
           <datalist id="categories">
@@ -120,15 +120,6 @@ export default function AddProduct() {
               );
             })}
           </datalist>
-          {/* <select>
-            {category.map((val, idx) => {
-              return (
-                <option key={idx} value={val.name}>
-                  {val.name}
-                </option>
-              );
-            })}
-          </select> */}
         </li>
         <li>
           <span>Price ($):</span>
@@ -170,8 +161,9 @@ export default function AddProduct() {
 
         <li className="flex a-center j-center">
           <button
-            onClick={(e) => {
-              validate();
+            onClick={() => {
+              validate(product);
+              console.log(product.categories);
             }}
           >
             Save

@@ -12,7 +12,6 @@ import Context from "./Store/Context";
 function App() {
   //context
   const [state, dispatch] = useStore();
-  console.log(state.authenticated);
   return (
     <Router>
       <div className="App">

@@ -20,6 +20,9 @@
         font-weight: bold;
         width: 20%;
         display: inline-block;
+        @include sm() {
+          width: 30%;
+        }
       }
 
       input,
@@ -51,6 +54,18 @@
             height: 100%;
           }
         }
+      }
+    }
+    li.categories-datalist {
+      input[list] {
+        margin-left: auto;
+        margin-right: auto;
+
+        //max-width: 500px;
+        background: #d2e9ff;
+        padding: 20px 20px 20px 20px;
+        font: 12px Arial, Helvetica, sans-serif;
+        color: #666;
       }
     }
   }

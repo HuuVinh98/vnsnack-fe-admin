@@ -20,6 +20,9 @@
         font-weight: bold;
         width: 20%;
         display: inline-block;
+        @include sm() {
+          width: 30%;
+        }
       }
 
       input,
