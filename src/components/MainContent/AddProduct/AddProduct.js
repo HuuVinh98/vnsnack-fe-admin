@@ -19,16 +19,27 @@ export default function AddProduct() {
   }, []);
 
   //biến chứa các thông tin của sản phẩm
-  const [categories, setCategories] = useState([{ id: 1 }, { id: 8 }]); //chọn categories cho sản phẩm
+  const [categories, setCategories] = useState([]); //chọn categories cho sản phẩm
   const [photos, setPhotos] = useState([]); //lấy hình ảnh và hiện lên
   const [name, setName] = useState(""); // lấy tên sản phẩm
   const [price, setPrice] = useState(0); // lấy giá sản phẩm
   const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
   const [description, setDescription] = useState(""); //lấy mô tả sản phẩm
   const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
-  const [product, setProduct] = useState({}); // object sản phẩm
+  const [product, setProduct] = useState({
+    photos,
+    name,
+    categories,
+    price,
+    quantity,
+    description,
+  }); // object sản phẩm
+  useEffect(() => {
+    setProduct({ photos, name, categories, price, quantity, description });
+  }, [photos, name, categories, price, quantity, description]); // mỗi khi có thay đổi thì set lại giá trị
+
   // các funcion
-  const deconsteImg = () => {
+  const deleteImg = () => {
     setPhotos([]);
   }; //xoá ảnh
   const onImageChange = (e) => {
@@ -48,7 +59,6 @@ export default function AddProduct() {
     );
   }; //thay đổi nội dung phần mô tả
   const postData = (product) => {
-    console.log(product);
     fetch("http://api.vnsnack.com/product", {
       method: "POST",
       headers: {
@@ -57,34 +67,11 @@ export default function AddProduct() {
       },
       body: JSON.stringify(product),
     });
-  }; //post to api
-  // async function _postData(url = "", data = {}) {
-  //   const response = await fetch(url, {
-  //     method: "POST",
-  //     mode: "cors",
-  //     cache: "no-cache",
-  //     credentials: "same-origin",
-  //     redirect: "follow",
-  //     referrerPolicy: "no-referrer",
-  //     headers: {
-  //       "Content-type": "application/json; charset=UTF-8",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-
-  //   return response.json();
-  // }
+  };
   const validate = (product) => {
     if (price >= 0 && quantity >= 0) {
-      setProduct({ photos, name, categories, price, quantity, description });
       postData(product);
-      // _postData("http://api.vnsnack.com/product", product)
-      //   .then((json) => {
-      //     console.log(json); // Handle success
-      //   })
-      //   .catch((err) => {
-      //     console.log(err); // Handle errors
-      //   });
+      alert("Successfully added new products");
     } else {
       if (price < 0) alert("Price must be greater than or equal to 0");
       if (quantity < 0) alert("Quantity must be greater than or equal to 0");
@@ -109,8 +96,8 @@ export default function AddProduct() {
           {photos.length !== 0 ? (
             <FontAwesomeIcon
               icon={faTimesCircle}
-              onClick={() => {
-                deconsteImg();
+              onClick={(e) => {
+                deleteImg();
               }}
             />
           ) : (
@@ -138,19 +125,22 @@ export default function AddProduct() {
           <span>Categories:</span>
           <input
             list="categories"
-            // onBlur={(e) => {
-            //   const temp = [...categories, e.target.value];
-            //   setCategories(
-            //     temp.filter((val, idx) => {
-            //       const index = temp.indexOf(val);
-            //       return idx === index;
-            //     })
-            //   );
-            // }}
+            onBlur={(e) => {
+              const temp = [
+                ...categories,
+                { id: parseInt(e.target.value) },
+              ].filter((val) => val.id);
+              setCategories(
+                temp.filter((val, idx) => {
+                  const index = temp.indexOf(val);
+                  return idx === index;
+                })
+              );
+            }}
           />
           <datalist id="categories">
             {category.map((val, idx) => {
-              return <option key={idx}>{val.name}</option>;
+              return <option key={idx}>{val.id}</option>;
             })}
           </datalist>
         </li>
@@ -196,7 +186,6 @@ export default function AddProduct() {
           <button
             onClick={() => {
               validate(product);
-              //console.log(product);
             }}
           >
             Save
