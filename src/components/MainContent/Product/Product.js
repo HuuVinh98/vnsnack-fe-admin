@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Item from "./Item/Item";
 import { useState, useEffect } from "react";
 import defaultImage from "../../../images/default-image.png";
+import http from "../../../Store/Variable";
 export default function Product() {
   const [keyWord, setKeyWord] = useState(""); //từ khoá tìm tiếm
   const [sort, setSort] = useState("new"); // sắp xếp theo
@@ -14,9 +15,10 @@ export default function Product() {
   const [currentCategory, setCurrentCategory] = useState("");
   //lấy danh sách sản phẩm
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
     fetch(
-      `http://api.vnsnack.com/product?keyword=${keyWord}${
+      `${http}product?keyword=${keyWord}${
         take > 0 ? `&take=${take}` : ""
       }&sort=${sort}${categoryId !== "All" ? `&categoryId=${categoryId}` : ""}`
     )
@@ -27,7 +29,7 @@ export default function Product() {
   //lấy danh mục
   const [category, setCategory] = useState([]);
   useEffect(() => {
-    fetch(`http://api.vnsnack.com/category`)
+    fetch(`${http}category`)
       .then((res) => res.json())
       .then((category) => setCategory(category));
   }, []);

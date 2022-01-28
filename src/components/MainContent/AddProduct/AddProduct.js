@@ -7,13 +7,13 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToMarkdown from "draftjs-to-markdown";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
+import http from "../../../Store/Variable";
 export default function AddProduct() {
   //lấy danh mục
 
   const [category, setCategory] = useState([]);
   useEffect(() => {
-    fetch(`http://api.vnsnack.com/category`)
+    fetch(`${http}category`)
       .then((res) => res.json())
       .then((category) => setCategory(category));
   }, []);
@@ -59,7 +59,7 @@ export default function AddProduct() {
     );
   }; //thay đổi nội dung phần mô tả
   const postData = (product) => {
-    fetch("http://api.vnsnack.com/product", {
+    fetch(`${http}product`, {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -69,12 +69,13 @@ export default function AddProduct() {
     });
   };
   const validate = (product) => {
-    if (price >= 0 && quantity >= 0) {
+    if (price >= 0 && quantity >= 0 && name.length > 0) {
       postData(product);
       alert("Successfully added new products");
     } else {
       if (price < 0) alert("Price must be greater than or equal to 0");
       if (quantity < 0) alert("Quantity must be greater than or equal to 0");
+      if (name.length <= 0) alert("Product must be have a name!");
     }
   }; // kiểm tra dữ liệu và upload
 
