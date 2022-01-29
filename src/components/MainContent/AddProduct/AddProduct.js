@@ -9,6 +9,8 @@ import draftToMarkdown from "draftjs-to-markdown";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import http from "../../../Store/Variable";
 export default function AddProduct() {
+  //toker
+  const accessToken = localStorage.getItem("accessToken");
   //lấy danh mục
 
   const [category, setCategory] = useState([]);
@@ -64,6 +66,7 @@ export default function AddProduct() {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(product),
     });
@@ -127,21 +130,16 @@ export default function AddProduct() {
           <input
             list="categories"
             onBlur={(e) => {
-              const temp = [
-                ...categories,
-                { id: parseInt(e.target.value) },
-              ].filter((val) => val.id);
-              setCategories(
-                temp.filter((val, idx) => {
-                  const index = temp.indexOf(val);
-                  return idx === index;
-                })
-              );
+              setCategories([...categories, { id: parseInt(e.target.value) }]);
             }}
           />
           <datalist id="categories">
             {category.map((val, idx) => {
-              return <option key={idx}>{val.id}</option>;
+              return (
+                <option key={idx} value={val.id}>
+                  {val.name}
+                </option>
+              );
             })}
           </datalist>
         </li>
@@ -187,6 +185,7 @@ export default function AddProduct() {
           <button
             onClick={() => {
               validate(product);
+              //console.log("đây là sản phẩm:", product);
             }}
           >
             Save

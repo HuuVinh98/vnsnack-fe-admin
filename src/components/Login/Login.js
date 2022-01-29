@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import http from "../../Store/Variable";
 export default function Login() {
   const [state, dispatch] = useStore(); //global state
-
   const [userMail, setUserMail] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [respone, setRespone] = useState("");
   const [auth, setAuth] = useState({
     email: userMail,
     phone: userPhone,
@@ -19,7 +19,11 @@ export default function Login() {
   useEffect(() => {
     setAuth({ email: userMail, phone: userPhone, password: password });
   }, [userPhone, userMail, password]);
-
+  //response
+  // useEffect(()=>
+  // {
+  //   fetch("")
+  // })
   const postAuth = (auth) => {
     fetch(`${http}auth/login`, {
       method: "POST",
@@ -28,8 +32,16 @@ export default function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(auth),
-    });
+    })
+      .then((res) => res.json())
+      .then((respone) => {
+        console.log("aa", respone);
+        localStorage.setItem("accessToken", respone.accessToken);
+        localStorage.setItem("refreshToken", respone.refreshToken);
+        setRespone(respone);
+      });
   };
+  console.log(respone);
   const checkUser = (user) => {
     let defaultMail =
       /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
