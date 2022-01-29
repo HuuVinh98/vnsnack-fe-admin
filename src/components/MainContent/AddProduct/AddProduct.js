@@ -7,26 +7,27 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToMarkdown from "draftjs-to-markdown";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import http from "../../../Store/Variable";
+import apiHttp from "../../../Store/Variable";
 export default function AddProduct() {
-  //toker
-  const accessToken = localStorage.getItem("accessToken");
-  //lấy danh mục
+  // get token from localStogare
 
+  const accessToken = localStorage.getItem("accessToken"); //get access token from localStogare
+
+  //get category from api
   const [category, setCategory] = useState([]);
   useEffect(() => {
-    fetch(`${http}category`)
+    fetch(`${apiHttp}category`)
       .then((res) => res.json())
-      .then((category) => setCategory(category));
+      .then((category) => setCategory(category.data));
   }, []);
 
-  //biến chứa các thông tin của sản phẩm
-  const [categories, setCategories] = useState([]); //chọn categories cho sản phẩm
-  const [photos, setPhotos] = useState([]); //lấy hình ảnh và hiện lên
-  const [name, setName] = useState(""); // lấy tên sản phẩm
-  const [price, setPrice] = useState(0); // lấy giá sản phẩm
-  const [quantity, setQuantity] = useState(0); // lấy số lượng sản phẩm
-  const [description, setDescription] = useState(""); //lấy mô tả sản phẩm
+  //These are variables containing product information
+  const [categories, setCategories] = useState([]); //selected categories
+  const [photos, setPhotos] = useState([]); // photos
+  const [name, setName] = useState(""); //name of the product
+  const [price, setPrice] = useState(0); //price of the product
+  const [quantity, setQuantity] = useState(0); // selected category
+  const [description, setDescription] = useState(""); //description of product
   const [editorState, setEditorState] = useState(EditorState.createEmpty()); //
   const [product, setProduct] = useState({
     photos,
@@ -35,15 +36,16 @@ export default function AddProduct() {
     price,
     quantity,
     description,
-  }); // object sản phẩm
+  }); // objectified product
+
   useEffect(() => {
     setProduct({ photos, name, categories, price, quantity, description });
-  }, [photos, name, categories, price, quantity, description]); // mỗi khi có thay đổi thì set lại giá trị
+  }, [photos, name, categories, price, quantity, description]); // use useEffect to get current state (not privious state)
 
-  // các funcion
+  //--------------funcions---------------
   const deleteImg = () => {
     setPhotos([]);
-  }; //xoá ảnh
+  }; //delete photos
   const onImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setPhotos([
@@ -53,15 +55,15 @@ export default function AddProduct() {
         },
       ]);
     }
-  }; //thêm ảnh
+  }; //add photos
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
     setDescription(
       draftToMarkdown(convertToRaw(editorState.getCurrentContent()))
     );
-  }; //thay đổi nội dung phần mô tả
+  }; //reset the value of the description when there is a change in the editor
   const postData = (product) => {
-    fetch(`${http}product`, {
+    fetch(`${apiHttp}product`, {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -70,7 +72,7 @@ export default function AddProduct() {
       },
       body: JSON.stringify(product),
     });
-  };
+  }; //post objectified product to api
   const validate = (product) => {
     if (price >= 0 && quantity >= 0 && name.length > 0) {
       postData(product);
@@ -80,7 +82,7 @@ export default function AddProduct() {
       if (quantity < 0) alert("Quantity must be greater than or equal to 0");
       if (name.length <= 0) alert("Product must be have a name!");
     }
-  }; // kiểm tra dữ liệu và upload
+  }; // check data before post to api and post data to api if it is in correct format
 
   return (
     <div className="add-product">
@@ -185,7 +187,6 @@ export default function AddProduct() {
           <button
             onClick={() => {
               validate(product);
-              //console.log("đây là sản phẩm:", product);
             }}
           >
             Save

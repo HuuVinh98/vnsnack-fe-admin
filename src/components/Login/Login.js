@@ -4,28 +4,23 @@ import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
 import { authenticated } from "../../Store/reducer";
 import { useStore } from "../../Store/hooks";
 import { useEffect, useState } from "react";
-import http from "../../Store/Variable";
+import apiHttp from "../../Store/Variable";
 export default function Login() {
-  const [state, dispatch] = useStore(); //global state
-  const [userMail, setUserMail] = useState("");
-  const [userPhone, setUserPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [respone, setRespone] = useState("");
+  const [state, dispatch] = useStore(); //global state (when you successfully logged instate.authorizated = true)
+  const [userMail, setUserMail] = useState(""); //  email login
+  const [userPhone, setUserPhone] = useState(""); // phone number login
+  const [password, setPassword] = useState(""); // password to login
   const [auth, setAuth] = useState({
     email: userMail,
     phone: userPhone,
     password: password,
-  });
+  }); // authentication information
   useEffect(() => {
     setAuth({ email: userMail, phone: userPhone, password: password });
-  }, [userPhone, userMail, password]);
-  //response
-  // useEffect(()=>
-  // {
-  //   fetch("")
-  // })
+  }, [userPhone, userMail, password]); // use useEffect to get current state (not privious state)
+
   const postAuth = (auth) => {
-    fetch(`${http}auth/login`, {
+    fetch(`${apiHttp}auth/login`, {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -34,14 +29,18 @@ export default function Login() {
       body: JSON.stringify(auth),
     })
       .then((res) => res.json())
-      .then((respone) => {
-        console.log("aa", respone);
-        localStorage.setItem("accessToken", respone.accessToken);
-        localStorage.setItem("refreshToken", respone.refreshToken);
-        setRespone(respone);
+      .then((response) => {
+        if (response.error == 0) {
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+          alert("login successfull!");
+          dispatch(authenticated(true)); // enter home page when when you successfully logged
+        } else {
+          alert("Wrong email/phone or password!");
+        }
       });
-  };
-  console.log(respone);
+  }; // post authentication information
+
   const checkUser = (user) => {
     let defaultMail =
       /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -57,7 +56,7 @@ export default function Login() {
     } else {
       return false;
     }
-  };
+  }; // check if the input is in the correct format and check if input is phone number or email
   return (
     <div className="login">
       <div className="container">
@@ -94,11 +93,10 @@ export default function Login() {
               //   //dispatch(authenticated(true));
               // }
               //checkUser(userName, password);
+              //console.log(response);
 
               if (auth.email.length > 0) {
-                console.log(auth);
                 postAuth(auth);
-                dispatch(authenticated(true));
               } else {
                 alert("Invalid email or phone number!");
               }

@@ -6,33 +6,30 @@ import { Link } from "react-router-dom";
 import Item from "./Item/Item";
 import { useState, useEffect } from "react";
 import defaultImage from "../../../images/default-image.png";
-import http from "../../../Store/Variable";
+import apiHttp from "../../../Store/Variable";
 export default function Product() {
-  const [keyWord, setKeyWord] = useState(""); //từ khoá tìm tiếm
-  const [sort, setSort] = useState("new"); // sắp xếp theo
-  const [take, setTake] = useState(0); // số lượng hiển thị
-  const [categoryId, setCategoryId] = useState("All"); //
-  const [currentCategory, setCurrentCategory] = useState("");
-  //lấy danh sách sản phẩm
-  const [products, setProducts] = useState([]);
-
+  const [keyWord, setKeyWord] = useState(""); //search keyword
+  const [sort, setSort] = useState("new"); // sort order
+  const [take, setTake] = useState(0); // number of products displayed
+  const [categoryId, setCategoryId] = useState("All"); // default category to show all products
+  const [currentCategory, setCurrentCategory] = useState(""); //search caterogy
+  const [categories, setCategories] = useState([]); //all of categories
+  const [products, setProducts] = useState([]); //All products have been returned
   useEffect(() => {
     fetch(
-      `${http}product?keyword=${keyWord}${
+      `${apiHttp}product?keyword=${keyWord}${
         take > 0 ? `&take=${take}` : ""
       }&sort=${sort}${categoryId !== "All" ? `&categoryId=${categoryId}` : ""}`
     )
       .then((res) => res.json())
-      .then((products) => setProducts(products));
-  }, [keyWord, sort, take, categoryId]);
+      .then((products) => setProducts(products.data));
+  }, [keyWord, sort, take, categoryId]); // get products from api
 
-  //lấy danh mục
-  const [category, setCategory] = useState([]);
   useEffect(() => {
-    fetch(`${http}category`)
+    fetch(`${apiHttp}category`)
       .then((res) => res.json())
-      .then((category) => setCategory(category));
-  }, []);
+      .then((categories) => setCategories(categories.data));
+  }, []); // get all of categories
 
   return (
     <div className="product flex f-column a-center">
@@ -73,7 +70,7 @@ export default function Product() {
             }}
           >
             <option>All</option>
-            {category.map((val, idx) => {
+            {categories.map((val, idx) => {
               return (
                 <option key={idx} value={val.id}>
                   {val.name}
