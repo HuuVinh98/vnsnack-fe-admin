@@ -5,14 +5,13 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
-import draftToMarkdown from "draftjs-to-markdown";
+//import draftToMarkdown from "draftjs-to-markdown";
+import { draftToMarkdown } from "markdown-draft-js";
 import "../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import apiHttp from "../../../Store/Variable";
 export default function AddProduct() {
   // get token from localStogare
-
   const accessToken = localStorage.getItem("accessToken"); //get access token from localStogare
-
   //get category from api
   const [category, setCategory] = useState([]);
   useEffect(() => {
@@ -24,6 +23,7 @@ export default function AddProduct() {
   //These are variables containing product information
   const [categories, setCategories] = useState([]); //selected categories
   const [photos, setPhotos] = useState([]); // photos
+  const [imgs, setImgs] = useState([]);
   const [name, setName] = useState(""); //name of the product
   const [price, setPrice] = useState(0); //price of the product
   const [quantity, setQuantity] = useState(0); // selected category
@@ -37,23 +37,26 @@ export default function AddProduct() {
     quantity,
     description,
   }); // objectified product
-
+  // useEffect(() => {
+  //   setPhotos(photos);
+  // }, [photos]);
   useEffect(() => {
     setProduct({ photos, name, categories, price, quantity, description });
   }, [photos, name, categories, price, quantity, description]); // use useEffect to get current state (not privious state)
 
   //--------------funcions---------------
   const deleteImg = () => {
-    setPhotos([]);
+    setImgs([]);
   }; //delete photos
   const onImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setPhotos([
-        ...photos,
+      setImgs([
+        ...imgs,
         {
           url: URL.createObjectURL(e.target.files[0]),
         },
       ]);
+      console.log(imgs);
     }
   }; //add photos
   const onEditorStateChange = (editorState) => {
@@ -73,6 +76,28 @@ export default function AddProduct() {
       body: JSON.stringify(product),
     });
   }; //post objectified product to api
+
+  function uploadFile() {
+    const files = document.querySelector("#fileInput").files;
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+    fetch(`${apiHttp}file/upload`, {
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        setPhotos(response.data);
+        setImgs(response.data);
+      });
+  } //upload photos
+
   const validate = (product) => {
     if (price >= 0 && quantity >= 0 && name.length > 0) {
       postData(product);
@@ -90,34 +115,34 @@ export default function AddProduct() {
       <ul className="flex f-column a-center">
         <li className="upload-imgs flex j-spaceBetween a-center">
           <span>Photos: </span>
-          <div className="imgs flex">
+          <div className="imgs row">
             {photos.map((val, idx) => {
               return (
-                <div className="img">
-                  <img src={val.image} />
+                <div className="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-xs-6">
+                  <div className="img">
+                    <img src={val.url} />
+                  </div>
                 </div>
               );
             })}
           </div>
-          {photos.length !== 0 ? (
-            <FontAwesomeIcon
-              icon={faTimesCircle}
-              onClick={(e) => {
-                deleteImg();
-              }}
-            />
-          ) : (
-            ""
-          )}
         </li>
         <li>
-          <span></span>
           <input
             type="file"
-            onChange={(e) => {
-              onImageChange(e);
-            }}
+            multiple
+            id="fileInput"
+            // onChange={(e) => {
+            //   onImageChange(e);
+            // }}
           />
+          <button
+            onClick={() => {
+              uploadFile();
+            }}
+          >
+            Upload
+          </button>
         </li>
         <li>
           <span>Name:</span>
@@ -149,6 +174,7 @@ export default function AddProduct() {
           <span>Price ($):</span>
           <input
             type="number"
+            placeholder="0"
             onChange={(e) => {
               setPrice(parseFloat(e.target.value));
             }}
@@ -159,6 +185,7 @@ export default function AddProduct() {
           <span>Quantity:</span>
           <input
             type="number"
+            placeholder="0"
             onChange={(e) => {
               setQuantity(parseInt(e.target.value));
             }}
@@ -174,19 +201,13 @@ export default function AddProduct() {
             editorClassName="editorClassName"
             onEditorStateChange={onEditorStateChange}
           />
-          {/* <textarea
-            disabled
-            value={
-              editorState &&
-              draftToMarkdown(convertToRaw(editorState.getCurrentContent()))
-            }
-          /> */}
         </li>
 
         <li className="flex a-center j-center">
           <button
             onClick={() => {
               validate(product);
+              //postProduct();
             }}
           >
             Save
